@@ -4,6 +4,7 @@ import io.github.ialegor.dbsaver.db.DatabaseReader;
 import io.github.ialegor.dbsaver.test.AbstractDatabaseTest;
 import io.github.ialegor.dbsaver.test.db.DistrictTestDatabase;
 import org.junit.Test;
+import org.postgresql.util.PSQLException;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
@@ -48,5 +49,14 @@ public class TabSeparatedValueOutTest extends AbstractDatabaseTest {
         List<String> strings = out.format(resultSet);
 
         assertEquals(6, strings.size());
+    }
+
+    @Test(expected = PSQLException.class)
+    public void format_selectParametrizedDistrictsWithoutParameters_test() throws Exception {
+        DistrictTestDatabase database = new DistrictTestDatabase();
+        apply(database);
+
+        Map<String, Object> parameters = new HashMap<>();
+        ResultSet resultSet = databaseReader.execute(database.selectAllWherePopulationMore(), connection(), parameters);
     }
 }
