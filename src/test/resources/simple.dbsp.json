@@ -1,0 +1,6 @@
+{
+  "name": "simple",
+  "description": "Simple request",
+  "parameters": [],
+  "sql": "SELECT NOW();"
+}
