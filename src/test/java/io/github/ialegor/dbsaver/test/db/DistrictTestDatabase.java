@@ -25,4 +25,8 @@ public class DistrictTestDatabase {
     public Query selectAll() {
         return new Query().name("simple").sql("select * from district;");
     }
+
+    public Query selectAllWherePopulationMore() {
+        return new Query().sql("select * from district where population > :population;");
+    }
 }

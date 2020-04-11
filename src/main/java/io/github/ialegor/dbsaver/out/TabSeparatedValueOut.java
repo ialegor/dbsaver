@@ -49,8 +49,13 @@ public class TabSeparatedValueOut {
                         builder.append(rs.getString(column));
                         break;
                     case Types.DATE:
-                    case Types.TIMESTAMP:
                         builder.append(rs.getDate(column));
+                        break;
+                    case Types.TIME:
+                        builder.append(rs.getTime(column));
+                        break;
+                    case Types.TIMESTAMP:
+                        builder.append(rs.getTimestamp(column));
                         break;
                     default:
                         builder.append(rs.getString(column));
