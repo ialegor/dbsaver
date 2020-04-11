@@ -1,0 +1,10 @@
+{
+  "name": "simple",
+  "sql": "select * from district where population >= :population",
+  "params": {
+    "population": {
+      "description": "The population of district",
+      "type": "integer"
+    }
+  }
+}

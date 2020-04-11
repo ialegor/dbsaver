@@ -23,10 +23,10 @@ public class DistrictTestDatabase {
     }
 
     public Query selectAll() {
-        return new Query().name("simple").sql("select * from district;");
+        return new Query().setName("simple").setSql("select * from district;");
     }
 
     public Query selectAllWherePopulationMore() {
-        return new Query().sql("select * from district where population > :population;");
+        return new Query().setSql("select * from district where population > :population;");
     }
 }

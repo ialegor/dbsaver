@@ -26,7 +26,7 @@ public class DatabaseReaderTest extends AbstractDatabaseTest {
         assertNotNull(databaseReader);
         assertNotNull(postgres);
 
-        Query query = new Query().name("simple").sql("select now();");
+        Query query = new Query().setName("simple").setSql("select now();");
         ResultSet resultSet = databaseReader.execute(query, connection());
         int rows = 0;
         while (resultSet.next()) {

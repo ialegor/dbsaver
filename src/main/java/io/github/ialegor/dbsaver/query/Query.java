@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true)
 public class Query {
     private String name;
     private String description;
-    private Map<String, QueryParameter> parameters = new HashMap<>();
+    private Map<String, QueryParameter> params = new HashMap<>();
     private String sql;
 }

@@ -5,23 +5,40 @@ import io.github.ialegor.dbsaver.query.Query;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.Properties;
 
 public class DatabaseReader {
 
-    public ResultSet execute(Query query, DatabaseConnectionString connection) {
-        throw new RuntimeException();
+    public ResultSet execute(Query query, ConnectionString connectionString) throws SQLException {
+        Properties properties = new Properties();
+        properties.setProperty("user", connectionString.getUsername());
+        properties.setProperty("password", connectionString.getPassword());
+        Connection connection = DriverManager.getConnection(connectionString.getConnectionString(), properties);
+        return execute(query, connection);
     }
 
     public ResultSet execute(Query query, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        return statement.executeQuery(query.sql());
+        return statement.executeQuery(query.getSql());
+    }
+
+    public ResultSet execute(Query query, ConnectionString connectionString, Map<String, Object> parameters) throws SQLException {
+        Properties properties = new Properties();
+        properties.setProperty("user", connectionString.getUsername());
+        properties.setProperty("password", connectionString.getPassword());
+        Connection connection = DriverManager.getConnection(connectionString.getConnectionString(), properties);
+        return execute(query, connection, parameters);
     }
 
     public ResultSet execute(Query query, Connection connection, Map<String, Object> parameters) throws SQLException {
-        NamedParameterPreparedStatement statement = NamedParameterPreparedStatement.createNamedParameterPreparedStatement(connection, query.sql());
+        NamedParameterPreparedStatement statement = NamedParameterPreparedStatement.createNamedParameterPreparedStatement(connection, query.getSql());
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-            if (entry.getValue() instanceof Integer) {
+            if (entry.getValue() instanceof Short) {
+                statement.setShort(entry.getKey(), (Short) entry.getValue());
+            } else if (entry.getValue() instanceof Integer) {
                 statement.setInt(entry.getKey(), (Integer) entry.getValue());
+            } else if (entry.getValue() instanceof Long) {
+                statement.setLong(entry.getKey(), (Long) entry.getValue());
             }
         }
         return statement.executeQuery();
