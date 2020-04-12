@@ -4,6 +4,7 @@ import com.axiomalaska.jdbc.NamedParameterPreparedStatement;
 import io.github.ialegor.dbsaver.query.Query;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Properties;
 
@@ -39,6 +40,8 @@ public class DatabaseReader {
                 statement.setInt(entry.getKey(), (Integer) entry.getValue());
             } else if (entry.getValue() instanceof Long) {
                 statement.setLong(entry.getKey(), (Long) entry.getValue());
+            } else if (entry.getValue() instanceof LocalDate) {
+                statement.setDate(entry.getKey(), Date.valueOf((LocalDate) entry.getValue()));
             }
         }
         return statement.executeQuery();

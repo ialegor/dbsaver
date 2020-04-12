@@ -7,6 +7,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ConnectionStringImpl implements ConnectionString {
 
+    private String name;
+
     private String connectionString;
 
     private String username;

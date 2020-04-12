@@ -1,5 +1,5 @@
 {
-  "name": "simple",
+  "name": "District population less or equal then",
   "sql": "select * from district where population >= :population",
   "params": {
     "population": {

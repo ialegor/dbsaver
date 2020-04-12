@@ -4,4 +4,7 @@ public enum Type {
     SHORT,
     INTEGER,
     LONG,
+    DATE,
+    TIME,
+    DATETIME,
 }

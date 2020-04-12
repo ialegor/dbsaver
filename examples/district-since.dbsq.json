@@ -1,0 +1,10 @@
+{
+  "name": "District since less or equal then",
+  "sql": "select * from district where since >= :since",
+  "params": {
+    "since": {
+      "description": "The since date of district",
+      "type": "date"
+    }
+  }
+}
