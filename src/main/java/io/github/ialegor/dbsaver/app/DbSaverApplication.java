@@ -14,22 +14,18 @@ import java.util.Map;
 public class DbSaverApplication {
 
     public static void main(String... args) throws Exception {
-        try {
-            Query query = SelectQueryCli.determine(args[0]);
-            System.out.println(query);
-            ConnectionString cs = SelectDatabaseCli.determine(args[1]);
-            System.out.println(cs);
+        Query query = SelectQueryCli.determine(args[0]);
+        System.out.println(query);
+        ConnectionString cs = SelectDatabaseCli.determine(args[0]);
+        System.out.println(cs);
 
-            DatabaseReader reader = new DatabaseReader();
+        DatabaseReader reader = new DatabaseReader();
 
-            Map<String, Object> params = DetermineParameterCli.determine(query);
+        Map<String, Object> params = DetermineParameterCli.determine(query);
 
-            ResultSet resultSet = reader.execute(query, cs, params);
+        ResultSet resultSet = reader.execute(query, cs, params);
 
-            TabSeparatedValueOut out = new TabSeparatedValueOut();
-            out.format(resultSet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        TabSeparatedValueOut out = new TabSeparatedValueOut();
+        out.format(resultSet);
     }
 }

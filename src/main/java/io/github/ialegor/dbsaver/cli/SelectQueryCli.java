@@ -6,8 +6,11 @@ import io.github.ialegor.dbsaver.query.Query;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class SelectQueryCli {
+
+    private static final String EXTENSION = ".dbsq.json";
 
     public static Query determine() throws IOException {
         return determine(".");
@@ -15,10 +18,20 @@ public class SelectQueryCli {
 
     public static Query determine(String directory) throws IOException {
         File file = new File(directory);
-        if (file.exists() && file.isFile() && file.getName().endsWith(".dbsq.json")) {
+        if (file.exists() && file.isFile() && file.getName().endsWith(EXTENSION)) {
             return parseFile(file);
         } else if (file.isDirectory()) {
-            throw new RuntimeException("Not implemented!");
+            System.out.println("Select query to execute:");
+            File[] queries = file.listFiles(pathname -> pathname.getName().endsWith(EXTENSION));
+            for (int i = 0, queriesLength = queries.length; i < queriesLength; i++) {
+                File queryFile = queries[i];
+                Query query = parseFile(queryFile);
+                System.out.printf("%d) %s%n", i + 1, query.getName());
+            }
+            System.out.printf("0) For exit%n> ");
+            Scanner scanner = new Scanner(System.in);
+            int i = scanner.nextInt();
+            return parseFile(queries[i - 1]);
         } else {
             throw new RuntimeException("Not implemented!");
         }

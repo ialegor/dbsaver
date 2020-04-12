@@ -28,6 +28,7 @@ public class DetermineParameterCli {
                 case INTEGER:
                 case LONG:
                     params.put(entry.getKey(), askLongValue(entry.getKey(), entry.getValue()));
+                    break;
                 case DATE:
                     params.put(entry.getKey(), askDateValue(entry.getKey(), entry.getValue()));
                     break;
@@ -72,16 +73,14 @@ public class DetermineParameterCli {
 
     private static LocalTime askTimeValue(String name, QueryParameter parameter) {
         System.out.println(parameter.getDescription());
-        System.out.print(name);
-        System.out.print(": ");
+        System.out.printf("%s: ", name);
         // TODO: implement time asking
         throw new RuntimeException();
     }
 
     private static LocalDateTime askDateTimeValue(String name, QueryParameter parameter) {
         System.out.println(parameter.getDescription());
-        System.out.print(name);
-        System.out.print(": ");
+        System.out.printf("%s: ", name);
         // TODO: implement datetime asking
         throw new RuntimeException();
     }
