@@ -3,6 +3,7 @@ package io.github.ialegor.dbsaver.cli;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ialegor.dbsaver.query.Project;
+import io.github.ialegor.dbsaver.query.Query;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +26,14 @@ public class SelectProjectCli {
         if (file.exists() && file.isFile() && file.getName().endsWith(EXTENSION)) {
             return parseFile(file);
         } else if (file.isDirectory()) {
+            File[] projects = file.listFiles(pathname -> pathname.getName().endsWith(EXTENSION));
+            if (projects != null && projects.length == 0) {
+                System.out.println("No projects in directory...");
+                return null;
+            }
             System.out.println("Select project:");
-            File[] dbs = file.listFiles(pathname -> pathname.getName().endsWith(EXTENSION));
-            for (int i = 0, queriesLength = dbs.length; i < queriesLength; i++) {
-                File dbFiles = dbs[i];
+            for (int i = 0, queriesLength = projects.length; i < queriesLength; i++) {
+                File dbFiles = projects[i];
                 Project query = parseFile(dbFiles);
                 System.out.printf("%d) %s%n", i + 1, query.getName());
             }
@@ -38,7 +43,7 @@ public class SelectProjectCli {
             if (i == 0) {
                 return null;
             }
-            return parseFile(dbs[i - 1]);
+            return parseFile(projects[i - 1]);
         } else {
             throw new RuntimeException("Not implemented!");
         }
@@ -47,6 +52,11 @@ public class SelectProjectCli {
     private static Project parseFile(File file) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
-        return mapper.readValue(file, Project.class);
+        Project project = mapper.readValue(file, Project.class);
+        for (Query query : project.getQueries()) {
+            SelectQueryCli.validate(query);
+            SelectQueryCli.resolveSql(file, query);
+        }
+        return project;
     }
 }

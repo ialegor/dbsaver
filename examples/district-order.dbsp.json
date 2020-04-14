@@ -14,6 +14,10 @@
     {
       "name": "District order by population asc where population less",
       "sql": "select * from district where population < :population"
+    },
+    {
+      "name": "SQL from file",
+      "sqlFile": "select-1.sql"
     }
   ]
 }

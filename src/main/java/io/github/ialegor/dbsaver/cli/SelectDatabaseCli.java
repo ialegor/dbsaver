@@ -26,8 +26,12 @@ public class SelectDatabaseCli {
         if (file.exists() && file.isFile() && file.getName().endsWith(EXTENSION)) {
             return parseFile(file);
         } else if (file.isDirectory()) {
-            System.out.println("Select database to connect:");
             File[] dbs = file.listFiles(pathname -> pathname.getName().endsWith(EXTENSION));
+            if (dbs != null && dbs.length == 0) {
+                System.out.println("No database connections in directory...");
+                return null;
+            }
+            System.out.println("Select database to connect:");
             for (int i = 0, queriesLength = dbs.length; i < queriesLength; i++) {
                 File dbFiles = dbs[i];
                 ConnectionString query = parseFile(dbFiles);

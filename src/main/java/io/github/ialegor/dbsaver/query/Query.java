@@ -1,5 +1,6 @@
 package io.github.ialegor.dbsaver.query;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,5 +13,10 @@ public class Query {
     private String name;
     private String description;
     private Map<String, QueryParameter> params = new HashMap<>();
+
+    @JsonProperty
     private String sql;
+
+    @JsonProperty
+    private String sqlFile;
 }

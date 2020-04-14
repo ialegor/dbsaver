@@ -32,7 +32,7 @@ public class DbSaverApplication implements Callable<Integer> {
     private File queryFile = null;
 
     @CommandLine.Option(names = {"--db"}, description = "Directory with database connections or database connection file")
-    private File dbFile = directoryFile;
+    private File dbFile;
 
     @Override
     public Integer call() throws Exception {
@@ -54,6 +54,10 @@ public class DbSaverApplication implements Callable<Integer> {
             query = SelectQueryCli.determine(queryFile);
         }
 
+        if (dbFile == null) {
+            dbFile = directoryFile;
+        }
+
         ConnectionString cs = SelectDatabaseCli.determine(dbFile);
 
         DatabaseReader reader = new DatabaseReader();
@@ -65,8 +69,9 @@ public class DbSaverApplication implements Callable<Integer> {
         } else if (query != null) {
             Map<String, Object> params = DetermineParameterCli.determine(query.getParams());
             resultSets = Collections.singletonList(reader.execute(query, cs, params));
-        } else  {
-            throw new RuntimeException("Not defined project and query!");
+        } else {
+            System.out.println("Not defined project and query!");
+            return 1;
         }
 
         TabSeparatedValueOut tsvOut = new TabSeparatedValueOut();
@@ -85,23 +90,5 @@ public class DbSaverApplication implements Callable<Integer> {
     public static void main(String... args) throws Exception {
         int exitCode = new CommandLine(new DbSaverApplication()).execute(args);
         System.exit(exitCode);
-
-        Project project = SelectProjectCli.determine(args[0]);
-        Query query = null;
-        if (project == null) {
-            query = SelectQueryCli.determine(args[0]);
-        }
-        System.out.println(query);
-        ConnectionString cs = SelectDatabaseCli.determine(args[0]);
-        System.out.println(cs);
-
-        DatabaseReader reader = new DatabaseReader();
-
-        Map<String, Object> params = DetermineParameterCli.determine(query);
-
-        ResultSet resultSet = reader.execute(query, cs, params);
-
-        TabSeparatedValueOut out = new TabSeparatedValueOut();
-        out.format(resultSet);
     }
 }
