@@ -1,10 +1,13 @@
 package io.github.ialegor.dbsaver.db;
 
 import com.axiomalaska.jdbc.NamedParameterPreparedStatement;
+import io.github.ialegor.dbsaver.query.Project;
 import io.github.ialegor.dbsaver.query.Query;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -45,5 +48,13 @@ public class DatabaseReader {
             }
         }
         return statement.executeQuery();
+    }
+
+    public List<ResultSet> execute(Project project, ConnectionString cs, Map<String, Object> params) throws SQLException {
+        List<ResultSet> resultSets = new ArrayList<>();
+        for (Query query : project.getQueries()) {
+            resultSets.add(execute(query, cs, params));
+        }
+        return resultSets;
     }
 }

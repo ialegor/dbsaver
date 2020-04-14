@@ -1,0 +1,19 @@
+{
+  "name": "District with orders by population",
+  "params": {
+    "population": {
+      "description": "The population of district",
+      "type": "integer"
+    }
+  },
+  "queries": [
+    {
+      "name": "District order by population asc where population greater",
+      "sql": "select * from district where population >= :population"
+    },
+    {
+      "name": "District order by population asc where population less",
+      "sql": "select * from district where population < :population"
+    }
+  ]
+}

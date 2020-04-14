@@ -16,33 +16,57 @@ public class DetermineParameterCli {
 
     private static final Pattern DATE_PATTERN = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 
+    @Deprecated
     public static Map<String, Object> determine(Query query) {
-        if (query.getParams() == null || query.getParams().isEmpty()) {
+        Map<String, QueryParameter> params1 = query.getParams();
+        return determine(params1);
+    }
+
+    public static Map<String, Object> determine(Map<String, QueryParameter> params) {
+        if (params == null || params.isEmpty()) {
             return Collections.emptyMap();
         }
 
-        Map<String, Object> params = new HashMap<>();
-        for (Map.Entry<String, QueryParameter> entry : query.getParams().entrySet()) {
+        Map<String, Object> determineParams = new HashMap<>();
+        for (Map.Entry<String, QueryParameter> entry : params.entrySet()) {
             switch (entry.getValue().getType()) {
                 case SHORT:
+                    determineParams.put(entry.getKey(), askShortValue(entry.getKey(), entry.getValue()));
+                    break;
                 case INTEGER:
+                    determineParams.put(entry.getKey(), askIntValue(entry.getKey(), entry.getValue()));
+                    break;
                 case LONG:
-                    params.put(entry.getKey(), askLongValue(entry.getKey(), entry.getValue()));
+                    determineParams.put(entry.getKey(), askLongValue(entry.getKey(), entry.getValue()));
                     break;
                 case DATE:
-                    params.put(entry.getKey(), askDateValue(entry.getKey(), entry.getValue()));
+                    determineParams.put(entry.getKey(), askDateValue(entry.getKey(), entry.getValue()));
                     break;
                 case TIME:
-                    params.put(entry.getKey(), askTimeValue(entry.getKey(), entry.getValue()));
+                    determineParams.put(entry.getKey(), askTimeValue(entry.getKey(), entry.getValue()));
                     break;
                 case DATETIME:
-                    params.put(entry.getKey(), askDateTimeValue(entry.getKey(), entry.getValue()));
+                    determineParams.put(entry.getKey(), askDateTimeValue(entry.getKey(), entry.getValue()));
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + entry.getValue().getType());
             }
         }
-        return params;
+        return determineParams;
+    }
+
+    private static Short askShortValue(String name, QueryParameter parameter) {
+        System.out.println(parameter.getDescription());
+        System.out.print(name);
+        System.out.print(": ");
+        return new Scanner(System.in).nextShort();
+    }
+
+    private static Integer askIntValue(String name, QueryParameter parameter) {
+        System.out.println(parameter.getDescription());
+        System.out.print(name);
+        System.out.print(": ");
+        return new Scanner(System.in).nextInt();
     }
 
     private static Long askLongValue(String name, QueryParameter parameter) {

@@ -18,6 +18,10 @@ public class SelectQueryCli {
 
     public static Query determine(String directory) throws IOException {
         File file = new File(directory);
+        return determine(file);
+    }
+
+    public static Query determine(File file) throws IOException {
         if (file.exists() && file.isFile() && file.getName().endsWith(EXTENSION)) {
             return parseFile(file);
         } else if (file.isDirectory()) {

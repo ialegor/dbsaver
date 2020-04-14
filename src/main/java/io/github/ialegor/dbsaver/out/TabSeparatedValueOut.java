@@ -14,7 +14,7 @@ import java.util.Set;
 @Slf4j
 public class TabSeparatedValueOut {
 
-    public final static char SEPARATOR = '\t';
+    private final static char SEPARATOR = '\t';
 
     public List<String> format(ResultSet rs) throws SQLException {
         List<String> strings = new ArrayList<>();
