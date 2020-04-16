@@ -14,6 +14,8 @@ public class Query {
     private String description;
     private Map<String, QueryParameter> params = new HashMap<>();
 
+    private String template;
+
     @JsonProperty
     private String sql;
 

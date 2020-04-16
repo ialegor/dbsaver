@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "The name of query",
+      "type": "string"
+    },
+    "description": {
+      "description": "The description of query",
+      "type": "string"
+    },
+    "params": {
+      "description": "The parameters of query",
+      "$ref": "params.schema.json"
+    },
+    "template": {
+      "description": "The template of out fileName",
+      "type": "string"
+    },
+    "sql": {
+      "description": "The SQL query",
+      "type": "string"
+    },
+    "sqlFile": {
+      "description": "The file with SQL query relative with source file of this query",
+      "type": "string"
+    }
+  }
+}

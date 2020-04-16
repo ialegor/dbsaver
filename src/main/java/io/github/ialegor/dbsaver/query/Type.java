@@ -7,4 +7,5 @@ public enum Type {
     DATE,
     TIME,
     DATETIME,
+    // TODO: add MONTH
 }

@@ -1,6 +1,7 @@
 package io.github.ialegor.dbsaver.out;
 
 import io.github.ialegor.dbsaver.db.DatabaseReader;
+import io.github.ialegor.dbsaver.query.QueryResult;
 import io.github.ialegor.dbsaver.test.AbstractDatabaseTest;
 import io.github.ialegor.dbsaver.test.db.DistrictTestDatabase;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class TabSeparatedValueOutTest extends AbstractDatabaseTest {
         DistrictTestDatabase database = new DistrictTestDatabase();
         apply(database);
 
-        ResultSet resultSet = databaseReader.execute(database.selectAll(), connection());
+        QueryResult resultSet = databaseReader.execute(database.selectAll(), connection());
 
         List<String> strings = out.format(resultSet);
 
@@ -44,9 +45,9 @@ public class TabSeparatedValueOutTest extends AbstractDatabaseTest {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("population", 100000);
-        ResultSet resultSet = databaseReader.execute(database.selectAllWherePopulationMore(), connection(), parameters);
+        QueryResult result = databaseReader.execute(database.selectAllWherePopulationMore(), connection(), parameters);
 
-        List<String> strings = out.format(resultSet);
+        List<String> strings = out.format(result);
 
         assertEquals(6, strings.size());
     }
@@ -57,6 +58,6 @@ public class TabSeparatedValueOutTest extends AbstractDatabaseTest {
         apply(database);
 
         Map<String, Object> parameters = new HashMap<>();
-        ResultSet resultSet = databaseReader.execute(database.selectAllWherePopulationMore(), connection(), parameters);
+        ResultSet resultSet = databaseReader.execute(database.selectAllWherePopulationMore(), connection(), parameters).getResult();
     }
 }

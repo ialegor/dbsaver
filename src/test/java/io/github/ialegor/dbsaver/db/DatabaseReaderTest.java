@@ -27,7 +27,7 @@ public class DatabaseReaderTest extends AbstractDatabaseTest {
         assertNotNull(postgres);
 
         Query query = new Query().setName("simple").setSql("select now();");
-        ResultSet resultSet = databaseReader.execute(query, connection());
+        ResultSet resultSet = databaseReader.execute(query, connection()).getResult();
         int rows = 0;
         while (resultSet.next()) {
             rows++;
@@ -40,7 +40,7 @@ public class DatabaseReaderTest extends AbstractDatabaseTest {
         DistrictTestDatabase database = new DistrictTestDatabase();
         apply(database);
 
-        ResultSet resultSet = databaseReader.execute(database.selectAll(), connection());
+        ResultSet resultSet = databaseReader.execute(database.selectAll(), connection()).getResult();
         int rows = 0;
         while (resultSet.next()) {
             rows++;

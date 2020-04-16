@@ -1,11 +1,13 @@
 package io.github.ialegor.dbsaver.out;
 
+import io.github.ialegor.dbsaver.query.QueryResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +18,10 @@ public class TabSeparatedValueOut {
 
     private final static char SEPARATOR = '\t';
 
-    public List<String> format(ResultSet rs) throws SQLException {
+    private final static DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+    public List<String> format(QueryResult result) throws SQLException {
+        ResultSet rs = result.getResult();
         List<String> strings = new ArrayList<>();
         ResultSetMetaData rsmd = rs.getMetaData();
         int column = 0;
@@ -55,7 +60,7 @@ public class TabSeparatedValueOut {
                         builder.append(rs.getTime(column));
                         break;
                     case Types.TIMESTAMP:
-                        builder.append(rs.getTimestamp(column));
+                        builder.append(rs.getTimestamp(column).toLocalDateTime().format(DATE_TIME_FORMAT));
                         break;
                     default:
                         builder.append(rs.getString(column));
@@ -66,8 +71,6 @@ public class TabSeparatedValueOut {
             strings.add(builder.toString());
         }
         unmappedColumnTypes.forEach(columnType -> log.warn("unmapped type={}", columnType));
-
-        strings.forEach(System.out::println);
         return strings;
     }
 }

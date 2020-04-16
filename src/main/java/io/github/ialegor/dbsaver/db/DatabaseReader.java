@@ -3,17 +3,16 @@ package io.github.ialegor.dbsaver.db;
 import com.axiomalaska.jdbc.NamedParameterPreparedStatement;
 import io.github.ialegor.dbsaver.query.Project;
 import io.github.ialegor.dbsaver.query.Query;
+import io.github.ialegor.dbsaver.query.QueryResult;
 
+import java.sql.Date;
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class DatabaseReader {
 
-    public ResultSet execute(Query query, ConnectionString connectionString) throws SQLException {
+    public QueryResult execute(Query query, ConnectionString connectionString) throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", connectionString.getUsername());
         properties.setProperty("password", connectionString.getPassword());
@@ -21,12 +20,13 @@ public class DatabaseReader {
         return execute(query, connection);
     }
 
-    public ResultSet execute(Query query, Connection connection) throws SQLException {
+    public QueryResult execute(Query query, Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        return statement.executeQuery(query.getSql());
+        ResultSet resultSet = statement.executeQuery(query.getSql());
+        return new QueryResult(query, Collections.emptyMap(), resultSet);
     }
 
-    public ResultSet execute(Query query, ConnectionString connectionString, Map<String, Object> parameters) throws SQLException {
+    public QueryResult execute(Query query, ConnectionString connectionString, Map<String, Object> parameters) throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", connectionString.getUsername());
         properties.setProperty("password", connectionString.getPassword());
@@ -34,7 +34,7 @@ public class DatabaseReader {
         return execute(query, connection, parameters);
     }
 
-    public ResultSet execute(Query query, Connection connection, Map<String, Object> parameters) throws SQLException {
+    public QueryResult execute(Query query, Connection connection, Map<String, Object> parameters) throws SQLException {
         NamedParameterPreparedStatement statement = NamedParameterPreparedStatement.createNamedParameterPreparedStatement(connection, query.getSql());
         for (Map.Entry<String, Object> entry : parameters.entrySet()) {
             if (entry.getValue() instanceof Short) {
@@ -47,14 +47,15 @@ public class DatabaseReader {
                 statement.setDate(entry.getKey(), Date.valueOf((LocalDate) entry.getValue()));
             }
         }
-        return statement.executeQuery();
+        ResultSet result = statement.executeQuery();
+        return new QueryResult(query, parameters, result);
     }
 
-    public List<ResultSet> execute(Project project, ConnectionString cs, Map<String, Object> params) throws SQLException {
-        List<ResultSet> resultSets = new ArrayList<>();
+    public List<QueryResult> execute(Project project, ConnectionString cs, Map<String, Object> params) throws SQLException {
+        List<QueryResult> results = new ArrayList<>();
         for (Query query : project.getQueries()) {
-            resultSets.add(execute(query, cs, params));
+            results.add(execute(query, cs, params));
         }
-        return resultSets;
+        return results;
     }
 }

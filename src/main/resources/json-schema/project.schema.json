@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of project"
+    },
+    "params": {
+      "$ref": "params.schema.json"
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "$ref": "query.schema.json"
+      }
+    }
+  }
+}

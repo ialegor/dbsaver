@@ -13,4 +13,5 @@ public class Project {
     private String name;
     private Map<String, QueryParameter> params = new HashMap<>();
     private List<Query> queries;
+//    TODO: add List<ConnectionString> connections
 }
